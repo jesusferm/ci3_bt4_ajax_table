@@ -132,3 +132,95 @@ footer p {
 	outline: none;
 	box-shadow: 0 0 0 0rem rgba(40, 167, 69, 0.25);
 }
+
+/*for form search official for all search table reorder*/
+.form-control-borderless {
+	border: none;
+}
+
+.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+	border: none;
+	outline: none;
+	box-shadow: none;
+}
+
+.badge-labeled {
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-right: 0.2rem;
+}
+
+.badge-labeled i {
+	padding: 0.25em  0.3rem;
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+	right: -0.2em;
+	background-color: #000000;
+	background-color: rgba(0, 0, 0, 0.2);
+	border-left: solid 1px rgba(255, 255, 255, .5);
+	border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.bias-input-group .input-group-addon + .input-group-btn > .btn {
+	border-radius: 0;
+}
+
+.bias-input-group .input-group-addon + .input-group-btn + .input-group-addon {
+	border-right: 0;
+	border-left: 0;
+}
+
+.input-group>.txt-search-nv:not(:first-child) {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-right: 2px;
+	box-shadow: none;
+}
+
+.input-group .txt-search-mdl {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-left: 1px solid #ced4da;
+	border-top: 1px solid #ced4da;
+	border-bottom: 1px solid #ced4da;
+	border-right: 0px !important;
+}
+
+.btn-search-nav-search-nav:hover {
+	color: none;
+	background-color: transparent;
+	border-color: #007bff
+}
+
+.btn-search-nav-search-nav.focus, .btn-search-nav-search-nav:focus {
+	box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .5);
+}
+
+.btn-search-nav-search-nav.disabled, .btn-search-nav-search-nav:disabled {
+	color: none;
+	background-color: transparent;
+}
+
+.btn-search-nav-search-nav:not(:disabled):not(.disabled).active, .btn-search-nav-search-nav:not(:disabled):not(.disabled):active, .show>.btn-search-nav-search-nav.dropdown-toggle {
+	color: none;
+	background-color: none;
+	border-color: transparent;
+}
+
+.btn-search-nav-frm-search-nav {
+	border-radius: 100px;
+	border-radius: 5px;
+	color: #611529;
+}
+.btn-search-nav {
+	color: none;
+	border: 1px solid #ced4da;
+	border-left: 0px;
+}
+
+.input-group>.input-group-append>.btn-search-nav, .input-group>.input-group-prepend:first-child>.btn-search-nav:not(:first-child), .input-group>.input-group-prepend:not(:first-child)>.btn-search-nav {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+/*for form search official for all search table reorder*/

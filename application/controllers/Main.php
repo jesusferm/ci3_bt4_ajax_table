@@ -18,65 +18,148 @@ class Main extends CI_Controller {
 		$this->load->view('common/foot');
 	}
 
-	public function loadContent($record = 0) {
-		$data['perpage'] 	= ($this->input->post('total_show')) ? $this->input->post('total_show'): 10; "";
-		$data['rowno']		= $record;
-		if($data['rowno'] 	!= 0){
-			$data['rowno'] 	= ($data['rowno']-1) * $data['perpage'];
-		}
-	
-		$recordCount 				= $this->post->getSearchCountTpcs($data);
-		$config['base_url'] 		= base_url().'main/loadContent';
-		$config['use_page_numbers'] = TRUE;
-		$config['next_link'] 		= '<i class="fa fa-angle-right"></i>';
-		$config['prev_link'] 		= '<i class="fa fa-angle-left"></i>';
-		$config['first_link'] 		= false;
-		$config['last_link'] 		= false;
-		$config['full_tag_open'] 	= '<ul class="pagination justify-content-center">';
-		$config['full_tag_close'] 	= '</ul>';
-		$config['num_tag_open'] 	= '<li class="page-item">';
-		$config['num_tag_close'] 	= '</li>';
-		$config['cur_tag_open'] 	= '<li class="page-item active"><a class="page-link" href="#">';
-		$config['cur_tag_close'] 	= '</a></li>';
-		$config['next_tag_open'] 	= '<li class="page-item"><a href="#" aria-label="Next">';
-		$config['next_tagl_close'] 	= '</a></li>';
-		$config['prev_tag_open'] 	= '<li class="page-item">';
-		$config['prev_tagl_close'] 	= '</li>';
-		$config['first_tag_open'] 	= '<li class="page-item">';
-		$config['first_tagl_close'] = '</li>';
-		$config['last_tag_open'] 	= '<li class="page-item"><a href="#" aria-label="Next">';
-		$config['last_tagl_close'] 	= '</a></li>';
-		$config['attributes'] 		= array('class' => 'page-link');
-		$config['total_rows'] 		= $recordCount;
-		$config['per_page'] 		= $data['perpage'];
-		$this->pagination->initialize($config);
-		$data['pagination'] 		= $this->pagination->create_links();
-		$list_search 				= $this->post->getSearchTpcs($data);
-		$data['search'] 			= "";
+	/**
+	 * [loadSecs load section by mymode]
+	 * @return [type] [description]
+	 */
+	public function loadPosts(){
+		$user = array(
+			'act_post'	=>1,
+			'user_id'	=>$this->session->userdata('id_user_session')
+		);
 
-		if ($list_search) {
-			foreach ($list_search as $tp) {
-				$data['search'] .= '<div class="col-md-4 col-sm-6 col-xs-6 mb-2">
-				<div class="card mb-2">
-						<a href="#">
-							<img src="'.base_url().'assets/app/images/default_post.png" class="card-img-top">
-						</a>
-						<div class="card-body font-weight-bold ">
-							<a class="text-dark" href="#">
-								'.$tp->nom_post.'
-							</a>
-							<div>
-								<small class="float float-right"><span class="byline-author-label">By</span>
-									<a class="byline-author-name-link" href="#" title="LiNuXiToS">LiNuXiToS</a></small>
-								<small>'.mesDiaAnio($tp->fc_post).'</small>
-							</div>
-						</div>
-					</div>
-			</div>';
+		$data['order'] 		= ($this->input->post('order')) ? $this->input->post('order'): "asc";
+		$data['order_by'] 	= ($this->input->post('order_by')) ? $this->input->post('order_by'): "id_post";;
+		$data['nivel'] 		= ($this->input->post('level')) ? $this->input->post('level'): 3;
+		$data['search'] 	= ($this->input->post('search')) ? $this->input->post('search'): "";
+		$data['page'] 		= ($this->input->post('page')) ? $this->input->post('page'): 1;
+		$data['per_page'] 	= ($this->input->post('limite')) ? $this->input->post('limite'): 10;
+		$data['filter'] 	= ($this->input->post('filter')) ? $this->input->post('filter')-1: 1;
+
+		$bus_sep 			= explode(' ', $data['search']);
+		$words 				= splitArraySearch($bus_sep);
+		$data['offset'] 	= ($data['page'] - 1) * $data['per_page'];
+		$data['adyacentes'] = 4;
+		
+		
+		$total 				= $this->post->count($data, $words);
+		$total_pages 		= ceil($total/$data['per_page']);
+		$reload 			= base_url()."main/loadPosts";
+		$response['total']  = "Total de resultados: ".$total;
+		$posts 			=  $this->post->search($data, $words);
+
+		$response['data'] 	= "";
+		if ($posts) {
+			$response['data'] = '<div class="table-responsive">
+					<table  class="table table-hover">
+						<thead>
+							<tr>
+								<th data-field="id_post" class="th-link text-left"> <i class="fas fa-sort"></i> Id </th>
+								<th data-field="nom_post" class="th-link"><i class="fas fa-sort"></i> Nombre</th>
+								<th class="text-center">Acciones</th>
+							</tr>
+						</thead>
+						<tbody>';
+			foreach ($posts as $post) {
+				$response['data'] .= '<tr id="row-id-'.$post->id_post.'">
+					<td class="text-left">
+						'.$post->id_post.'
+					</td>
+					<td>
+						'.$post->nom_post.'
+					</td>
+					<td class="text-center">
+						<button style="width: 40px;" type="button" class="btn btn-danger mdl-del-reg" title="Eliminar" data-toggle="modal" data-target="#mdl-del-reg" data-idreg="'.$post->id_post.'" data-nomreg="'.$post->desc_post.'">
+							<i class="fal fa-trash-alt"></i>
+						</button>
+					</td>
+				</tr>';
 			}
+			$response['data'] .= '</tbody></table></div>';
+			$response['data'] .= '<span class="pull-right">'.paginate($reload, $data['page'], $total_pages, $data['adyacentes'], 'load').'</span>';
+			$response['data'] .= '<script>
+					$(".table th.th-link").each(function(){
+						$(this).css("cursor","pointer").hover(
+							function(){
+								$(this).addClass("text-primary");
+							},
+							function(){
+								$(this).removeClass("text-primary");
+							}).click( function(){ 
+								//document.location = $(this).attr("data-href");
+								if (order=="asc") {
+									order 	= "desc";
+								}else{
+									order 	= "asc";
+								}
+								order_by = $(this).attr("data-field");
+								load(1);
+							}
+						);
+					});
+				</script>';
 		}else{
-			$data['search']='<div class="col-md-12 text-center"><div class="alert alert-danger" role="alert"><i class="fas fa-search"></i> No se encontraron resultados.</div></div>';
+			$response['data'] = '<div class="alert alert-info text-center" role="alert">
+				  <i class="fa fa-puzzle-piece"></i> Sin ecciones agregadas...
+				</div>';
 		}
-		echo json_encode($data);
+
+		echo json_encode($response);
+	}
+
+	public function delSec(){
+		$list_ids 	= $this->input->post('list_ids');
+
+		if (empty($list_ids)) {
+			$response['tipo'] = "danger";
+			$response['icon'] = "fa fa-exclamation-triangle";
+			$response['msg'] = "El registro presenta un error en el ID, por favor reinice sesión.";
+		}else{
+			$bus_sep = explode(',', $list_ids);
+			foreach ($bus_sep as $id) {
+				if ($this->post->delSec($id)) {
+					$response['tipo'] = "success";
+					$response['icon'] = "fa fa-check";
+					$response['msg'] = "Sección eliminada.";
+				}else{
+					$response['tipo'] = "danger";
+					$response['icon'] = "fa fa-exclamation-triangle";
+					$response['msg'] = "Ocurrió un error al eliminar la información del inmueble. Intente más tarde.";
+				}
+			}
+		}
+		echo json_encode($response);
+	}
+
+	public function addSec(){
+		$post = array(
+			'nom_post'		=>$this->input->post('txt-nom-sec'),
+			'desc_post'		=>$this->input->post('txt-desc-sec'),
+			'icon_post'		=>$this->input->post('txt-icon-sec'),
+			'url_post'		=>$this->input->post('txt-url-sec'),
+			'color_post'		=>$this->input->post('slt-color-sec'),
+			'visible_post'	=>$this->input->post('slt-visible-sec')
+		);
+
+		if (empty($this->session->userdata('id_user_session'))) {
+			$errors[] 		= "Ocurrió un error con su autenticación. Por favor reinice la sesión.";
+		}else{
+			if ($this->post->addSec($post)) {
+				$messages[] = "Sección agregada correctamente.";
+			}else{
+				$errors[] 	= "Ocurrió un error al conectarse al base de datos. Intenta de nuevo más tarde.";
+			}
+		}
+
+		if (isset($errors)){
+			foreach ($errors as $error){
+				echo '<script language="javascript">notify_msg("fa fa-times", "Mensaje: ", "'.$error.'", "#", "danger");</script>';
+			}
+		}
+		if (isset($messages)){
+			foreach ($messages as $message){
+				echo '<script language="javascript">notify_msg("fa fa-check", "Mensaje: ", "'.$message.'", "#", "success");</script>';
+			}
+		}
 	}
 }
