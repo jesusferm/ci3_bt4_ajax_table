@@ -28,7 +28,7 @@ var base_url = "<?php echo base_url();?>";
 	<!-- /content ajax load pagination -->
 </div>
 
-<script src="<?php echo base_url();?>assets/app/ajax/ajxfuctloadexmp.js"></script>
+<script src="<?php echo base_url();?>assets/app/ajax/ajxtablepage.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		load(0);
