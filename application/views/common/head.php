@@ -8,6 +8,8 @@
 
 		<!-- Bootstrap core CSS-->
 		<link href="<?= base_url();?>assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="<?= base_url();?>assets/vendor/bootstrap/css/animate.css" rel="stylesheet">
+		<link href="<?= base_url();?>assets/vendor/bootstrap/css/animation.css" rel="stylesheet">
 
 		<!-- Custom fonts for this template-->
 		<link href="<?= base_url();?>assets/vendor/font-awesome/css/all.css" rel="stylesheet" type="text/css">
@@ -15,6 +17,9 @@
 
 		<script src="<?= base_url();?>assets/vendor/jquery/jquery-3.4.1.js"></script>
 		<script src="<?= base_url();?>assets/vendor/jquery/jquery-3.4.1.min.js"></script>
+
+		<script src="<?= base_url();?>assets/vendor/notify/bootstrap-notify.min.js"></script>
+		<script src="<?= base_url();?>assets/vendor/notify/fun_msg_notify.js"></script>
 		
 		<meta name="description" content="Website">
 		<meta name="author" content="Fernando Merino">

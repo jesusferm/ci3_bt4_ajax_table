@@ -2,7 +2,6 @@ var total_list 		= 5;
 var filter_by 		= 2;
 var order 			= "asc";
 var order_by		= "id_post";
-var lvlsec 			= 3;
 
 $("#form-search").submit(function( event ) {
 	/*$('#btn-del-girl').attr("disabled", true);*/
@@ -67,7 +66,8 @@ $("#form-del-reg").submit(function( event ) {
 	var idreg 		= $("#txt-id-reg-del").val();
 	$.ajax({
 		type: 		"POST",
-		url: 		base_url+"actsec/delSec",
+		method: 	"POST",
+		url: 		base_url+"main/delReg",
 		data: {
 			list_ids: idreg,
 		},
@@ -80,11 +80,7 @@ $("#form-del-reg").submit(function( event ) {
 			$('#btn-del-reg').attr("disabled", false);
 			$("#btn-close-mdl-del-reg").trigger("click");
 			notify_msg(datos.icon, " ", datos.msg, "#", datos.tipo);
-			if (datos.tipo=="success") {
-				//load(0);
-				$("#row-id-"+idreg).remove();
-			}
-			//$("#form-del-reg")[0].reset();
+			load(0);
 		},
 		error: function(data) {
 			$("#form-del-reg")[0].reset();
@@ -95,25 +91,29 @@ $("#form-del-reg").submit(function( event ) {
 	event.preventDefault();
 });
 
-$("#form-add-sec").submit(function( event ) {
-	$('#btn-add-sec').attr("disabled", true);
+$("#form-add-reg").submit(function( event ) {
+	$('#btn-add-reg').attr("disabled", true);
 	var parametros = $(this).serialize();
 	$.ajax({
 		type: "POST",
-		url:base_url+"actsec/addSec",
+		dataType: 	"json",
+		url:base_url+"main/addReg",
 		data: parametros,
 		beforeSend: function(objeto){
-			$("#btn-add-sec").html(
-				'<img src="'+base_url+'assets/images/icons/loading_1.gif" width="20px"> Guardando ...'
-			);
+			$("#btn-add-reg").html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agregando');
 		},
 		success: function(datos){
-			$("#div-cnt-msg-add-sec").html(datos);
-			$("#btn-add-sec").html('<i class="fa fa-floppy-o"></i> Agregar');
-			$('#btn-add-sec').attr("disabled", false);
-			$("#form-add-sec")[0].reset();
-			$("#btn-close-form-add-sec").trigger("click");
-			load();
+			notify_msg(datos.icon, " ", datos.msg, "#", datos.tipo);
+			$("#btn-add-reg").html('<i class="fa fa-check"></i> Agregar');
+			$('#btn-add-reg').attr("disabled", false);
+			$("#form-add-reg")[0].reset();
+			$("#btn-close-mdl-add-reg").trigger("click");
+			load(0);
+		},
+		error: function(data) {
+			$("#form-add-reg")[0].reset();
+			$("#btn-add-reg").html('<i class="fa fa-check"></i> Agregar');
+			$("#div-cnt-del-reg").html('<div class="alert alert-danger" role="alert"><i class="fas fa-exclamation-circle"></i> Error de comunicación con el servidor. Intenta más tarde.</div>');
 		}
 	});
 	event.preventDefault();

@@ -19,6 +19,7 @@
 		<script src="<?= base_url();?>assets/vendor/jquery/jquery-3.4.1.min.js"></script>
 		<script src="<?= base_url();?>assets/vendor/bootstrap/js/popper.min.js"></script>
 		<script src="<?= base_url();?>assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="<?= base_url();?>assets/vendor/notify/bootstrap-notify.min.js"></script>
 		<script src="<?= base_url();?>assets/vendor/bootstrap/js/jquery.sharrre.js"></script>
 		<script src="<?= base_url();?>assets/vendor/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 		<script src="<?= base_url();?>assets/vendor/bootstrap/js/feather.min.js"></script>

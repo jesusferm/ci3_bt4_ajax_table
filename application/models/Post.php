@@ -80,4 +80,24 @@ class Post extends CI_Model {
 		$query 	= $this->db->get();
 		return $query->result();
 	}
+
+	function delReg($id){
+		$data = array(
+			'act_post'	=> 0
+		);
+		$this->db->where('id_post', $id);
+		if($this->db->update('ajx_posts', $data)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public function addReg($reg){
+		if($this->db->insert('ajx_posts', $reg)){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

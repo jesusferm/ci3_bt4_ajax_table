@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+include("mdls/mdl_posts.php");
 ?>
 <script type='text/javascript'>
 var base_url = "<?php echo base_url();?>";
@@ -61,7 +62,7 @@ var base_url = "<?php echo base_url();?>";
 			</form>
 		</div>
 		<div class="col-md-2 col-sm-2 col-2">
-			<button class="btn btn-block btn-success" title="Agregar Sección" data-toggle="modal" data-target="#mdl-add-sec">
+			<button class="btn btn-block btn-success" title="Agregar Sección" data-toggle="modal" data-target="#mdl-add-reg">
 				<i class="fa fa-plus-circle"></i> Agregar Registro
 			</button>
 		</div>

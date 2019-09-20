@@ -30,7 +30,6 @@ class Main extends CI_Controller {
 
 		$data['order'] 		= ($this->input->post('order')) ? $this->input->post('order'): "asc";
 		$data['order_by'] 	= ($this->input->post('order_by')) ? $this->input->post('order_by'): "id_post";;
-		$data['nivel'] 		= ($this->input->post('level')) ? $this->input->post('level'): 3;
 		$data['search'] 	= ($this->input->post('search')) ? $this->input->post('search'): "";
 		$data['page'] 		= ($this->input->post('page')) ? $this->input->post('page'): 1;
 		$data['per_page'] 	= ($this->input->post('limite')) ? $this->input->post('limite'): 10;
@@ -39,7 +38,7 @@ class Main extends CI_Controller {
 		$bus_sep 			= explode(' ', $data['search']);
 		$words 				= splitArraySearch($bus_sep);
 		$data['offset'] 	= ($data['page'] - 1) * $data['per_page'];
-		$data['adyacentes'] = 4;
+		$data['adyacentes'] = 1;
 		
 		
 		$total 				= $this->post->count($data, $words);
@@ -69,7 +68,7 @@ class Main extends CI_Controller {
 						'.$post->nom_post.'
 					</td>
 					<td class="text-center">
-						<button style="width: 40px;" type="button" class="btn btn-danger mdl-del-reg" title="Eliminar" data-toggle="modal" data-target="#mdl-del-reg" data-idreg="'.$post->id_post.'" data-nomreg="'.$post->desc_post.'">
+						<button style="width: 40px;" type="button" class="btn btn-danger mdl-del-reg" title="Eliminar" data-toggle="modal" data-target="#mdl-del-reg" data-idreg="'.$post->id_post.'" data-nomreg="'.$post->nom_post.'">
 							<i class="fal fa-trash-alt"></i>
 						</button>
 					</td>
@@ -100,14 +99,14 @@ class Main extends CI_Controller {
 				</script>';
 		}else{
 			$response['data'] = '<div class="alert alert-info text-center" role="alert">
-				  <i class="fa fa-puzzle-piece"></i> Sin ecciones agregadas...
+				  <i class="fas fa-search"></i> Búsqueda sin resultados...
 				</div>';
 		}
 
 		echo json_encode($response);
 	}
 
-	public function delSec(){
+	public function delReg(){
 		$list_ids 	= $this->input->post('list_ids');
 
 		if (empty($list_ids)) {
@@ -117,10 +116,10 @@ class Main extends CI_Controller {
 		}else{
 			$bus_sep = explode(',', $list_ids);
 			foreach ($bus_sep as $id) {
-				if ($this->post->delSec($id)) {
+				if ($this->post->delReg($id)) {
 					$response['tipo'] = "success";
 					$response['icon'] = "fa fa-check";
-					$response['msg'] = "Sección eliminada.";
+					$response['msg'] = "Registro eliminado.";
 				}else{
 					$response['tipo'] = "danger";
 					$response['icon'] = "fa fa-exclamation-triangle";
@@ -131,35 +130,22 @@ class Main extends CI_Controller {
 		echo json_encode($response);
 	}
 
-	public function addSec(){
-		$post = array(
-			'nom_post'		=>$this->input->post('txt-nom-sec'),
-			'desc_post'		=>$this->input->post('txt-desc-sec'),
-			'icon_post'		=>$this->input->post('txt-icon-sec'),
-			'url_post'		=>$this->input->post('txt-url-sec'),
-			'color_post'		=>$this->input->post('slt-color-sec'),
-			'visible_post'	=>$this->input->post('slt-visible-sec')
+	public function addReg(){
+		$p = array(
+			'nom_post'		=>$this->input->post('txt-nom-reg'),
+			'desc_post'		=>$this->input->post('txt-desc-reg'),
 		);
 
-		if (empty($this->session->userdata('id_user_session'))) {
-			$errors[] 		= "Ocurrió un error con su autenticación. Por favor reinice la sesión.";
+		if ($this->post->addReg($p)) {
+			$response['tipo'] = "success";
+			$response['icon'] = "fa fa-check";
+			$response['msg'] = "Registro agregado correctamente.";
 		}else{
-			if ($this->post->addSec($post)) {
-				$messages[] = "Sección agregada correctamente.";
-			}else{
-				$errors[] 	= "Ocurrió un error al conectarse al base de datos. Intenta de nuevo más tarde.";
-			}
+			$response['tipo'] = "danger";
+			$response['icon'] = "fa fa-exclamation-triangle";
+			$response['msg'] = "Ocurrió un error al eliminar la información del inmueble. Intente más tarde.";
 		}
 
-		if (isset($errors)){
-			foreach ($errors as $error){
-				echo '<script language="javascript">notify_msg("fa fa-times", "Mensaje: ", "'.$error.'", "#", "danger");</script>';
-			}
-		}
-		if (isset($messages)){
-			foreach ($messages as $message){
-				echo '<script language="javascript">notify_msg("fa fa-check", "Mensaje: ", "'.$message.'", "#", "success");</script>';
-			}
-		}
+		echo json_encode($response);
 	}
 }
