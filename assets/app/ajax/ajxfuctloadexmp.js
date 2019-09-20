@@ -20,7 +20,7 @@ function load(pageNum){
 			total_show: total_show,
 			search: 	search
 		},
-		url: base_url+'main/loadContent/'+pageNum,
+		url: base_url+'paginate/loadContent/'+pageNum,
 		dataType: 'JSON',
 		beforeSend: function(objeto){
 			$("#div-cnt-ajax").html('<div class="col-md-12 text-center">'+

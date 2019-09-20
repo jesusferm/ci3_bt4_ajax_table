@@ -26,7 +26,7 @@ class Paginate extends CI_Controller {
 		}
 	
 		$recordCount 				= $this->post->getSearchCountTpcs($data);
-		$config['base_url'] 		= base_url().'main/loadContent';
+		$config['base_url'] 		= base_url().'paginate/loadContent';
 		$config['use_page_numbers'] = TRUE;
 		$config['next_link'] 		= '<i class="fa fa-angle-right"></i>';
 		$config['prev_link'] 		= '<i class="fa fa-angle-left"></i>';
